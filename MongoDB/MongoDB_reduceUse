@@ -1,0 +1,54 @@
+db.runCommand({"group": {
+	"ns":"Healthcare",
+	"key":{"CENSUS REGION":-1},
+	"initial":{"rc":0,"totInc":0},
+	"$reduce" : function(doc, prev) {
+		prev.rc = prev.rc + 1; 
+		prev.totInc = doc.TOTAL_INCOME + prev.totInc;
+		}
+}})
+
+
+
+db.runCommand({"group": {
+	"ns":"Healthcare",
+	"key":{"CENSUS REGION":-1},
+	"initial":{"rc":0,"totInc":0},
+	"$reduce" : function(doc, prev) {
+		prev.rc = prev.rc + 1; 
+		prev.totInc = doc["TOTAL INCOME"] + prev.totInc;
+		}, 
+	"condition" : {"CENSUS REGION" :{"$gt":0}}, 
+	"finalize" : function(prev) {
+		var AvgIncome = prev.totInc / prev.rc; 
+		delete prev.totInc; 
+		prev.AvgInc = AvgIncome; 
+		}
+}})
+
+
++ replace "$key" with "$keyf" : function(x) ... to use a function as a key,
+e.g., "x.category.toLowerCase()" to normalize haphazard key values for key
+'category'
+
+
+'''
+Using mapReduce on foobar.foo; results are stored toa  tempoary db location
+in MongoDB; using db[<resultname>.result].find() returns all that fun stuff;
+'''
+map = function () {
+    for (var key in this) {
+        emit(key, {count:1});
+    }
+}
+
+reduce = function (key, emits) {
+    var result = {count:0};
+    for (var i in emits) {
+        result.count += emits[i].count;
+    }
+    return result;
+}
+
+mr2 = db.foo.mapReduce(map, reduce, {out: "myoutput"})
+db[mr2.result].find()
