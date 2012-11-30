@@ -33,6 +33,7 @@ class DBConnection:
             conn = connectSQL.RSSSQLConn()
         else:
             # error shit
+            pass
         return conn
 
     def makeMongoConn(self, mens, **dargs):
@@ -43,12 +44,12 @@ class DBConnection:
         if mens=='NBA':
             conn = NBAMonConn(db_name, coll_name)
         elif mens=='RSS':
-            db_name = 'WebPages'
-            coll_name = 'Wired'
-            if 'coll' in dargs.keys():
-                coll_name = dargs_coll
-                
-            conn = connectMon.RSSMonConn(db_name, coll_name)
+##            coll_name = 'Wired'
+##            if 'coll' in dargs.keys():
+##                coll_name = dargs_coll
+            ## fix this stupud shit, yo
+            conn = connectMon.RSSMonConn(**{'db_name':'WebPages',
+                                         'coll_name':'TestPages'})
         return conn
 
 class NBAConn(DBConnection):
@@ -61,5 +62,5 @@ class NBAConn(DBConnection):
 class RSSConn(DBConnection):
     def __init__(self):
         DBConnection.__init__(self)
-        self.__mdbConn = self.makeMongoConn('RSS')
-        self.__sqlConn = self.makeMySQLConn('RSS')
+        self.mdbConn = self.makeMongoConn('RSS')
+       # self.__sqlConn = self.makeMySQLConn('RSS')

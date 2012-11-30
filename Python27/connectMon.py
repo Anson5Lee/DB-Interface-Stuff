@@ -4,6 +4,7 @@ to create the connections.
 """
 import sys, os
 import datetime, time
+import math
 
 import pymongo, bson
 
@@ -12,26 +13,39 @@ class MongoConn:
     General handle for making a connection to a local Mongo database
     from within python; utilizes pymongo package;
     """
-    def __init__(self, args=None, **dargs):
-        conn = pymongo.Connection()
-        if db_name in conn.database_names:
-            conn = conn[db_name]
-            if coll_name in conn.collection_names():
-                self.conn = conn
-            elif not coll_nam
-                self.conn = conn
-    ##        else:
-    ##    else:
+    def __init__(self, args, **dargs):
+        self._store = dict()
+        if 'db_name' in args.keys():
+            db_name = args['db_name']
+            coll_name = args['coll_name'] if 'coll_name' in args.keys() else ''
+            conn = pymongo.Connection()
+            if db_name in conn.database_names():
+                conn = conn[db_name]
+                if coll_name in conn.collection_names():
+                    self.conn = conn[coll_name]
+                elif not coll_nam:
+                    self.conn = conn
+                else:
+                    print('Failure to make connections...')
+        ##        else:
+        ##    else:
 
 
     def MongoInsert(self, data):
-        self.__store['lastIDs'], self.__store['lastErr']\
-                                 = self.RecursInsert(self, data)
+        try:
+            ids = self.conn.insert(data)
+            self._store['lastIDs'] = ids
+        except:
+            print("Breaking data into parts")
+            self._store['lastIDs'], self._store['lastErr']\
+                                    = self.RecursInsert(data)
 
+    ## something wrong with this portion...figure it out..
     def RecursInsert(self, data):
         ids = list()
         ers = list()
-        N = len(health_list)
+        N = len(data)
+        print(N)
         db_index = math.floor(N/2.0)
         try:
             ids1 = self.conn.insert(data[:db_index])
@@ -65,12 +79,12 @@ class NBAMonConn(MongoConn):
         MySQL database with new information;
         '''
         if pageType=='pbp':
-
+            pass
         elif pageType=='box':
             self.updateBox(self, data)
 
         elif pageType=='ext':
-
+            pass
         else:
             print "Warning! non valid page type; not updating"
 

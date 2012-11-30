@@ -49,12 +49,12 @@ class NBASQLConn(MySQLConn):
         MySQL database with new information;
         '''
         if pageType=='pbp':
-
+            pass
         elif pageType=='box':
             updateBox(cursor, data)
-
+            
         elif pageType=='ext':
-
+            pass
         else:
             print "Warning! non valid page type; not updating"
 
