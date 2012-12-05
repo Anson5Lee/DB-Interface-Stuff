@@ -8,9 +8,6 @@ meant to ghandle inserting objects, tracking ids. querying, etc.
 import sys, os
 import math
 
-import pymongo, bson
-import MySQLdb as ms
-
 import connectSQL
 import connectMon
 
