@@ -5,10 +5,7 @@ to create the connections.
 import sys, os
 import datetime, time
 
-import pymongo, bson
 import MySQLdb as ms
-
-
 
 class MySQLConn:
     """
@@ -31,7 +28,6 @@ class MySQLConn:
         else:
             self.conn = conn
             self.cursor = self.conn.cursor()
-
     def respawn(self):
         self.cursor.close()
         self.cursor = self.conn.cursor()
@@ -57,7 +53,6 @@ class NBASQLConn(MySQLConn):
             pass
         else:
             print "Warning! non valid page type; not updating"
-
 
     def updateGameInfo(self, data):
         '''
